@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,17 @@ class MainActivity : ComponentActivity() {
         trueButton = findViewById<Button>(R.id.true_button)
         falseButton = findViewById<Button>(R.id.false_button)
 
+//        trueButton.setOnClickListener {
+//            val rootView = findViewById<View>(android.R.id.content)
+//            Snackbar().make(rootView, R.string.true_button, Snackbar().LENGTH_SHORT).show()
+//        }
+//
+//        falseButton.setOnClickListener {
+//            val rootView = findViewById<View>(android.R.id.content)
+//            Snackbar().make(rootView, R.string.false_button, Snackbar().LENGTH_SHORT).show()
+//        }
+
+
         trueButton.setOnClickListener { view: View ->
             Toast.makeText(
                 this,
@@ -46,4 +59,5 @@ class MainActivity : ComponentActivity() {
                 .show()
         }
     }
+
 }
