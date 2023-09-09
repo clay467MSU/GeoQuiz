@@ -9,9 +9,12 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/question_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Canberra is the capital of Australia" />
+        android:gravity="center"
+        android:text="@string/question_australia"/>
+<!--        android:text="Canberra is the capital of Australia" -->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,4 +32,25 @@
             android:layout_height="wrap_content"
             android:text="False"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/prev_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prev_button"
+            android:drawableStart="@drawable/back_arrow"/>
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/next_arrow"
+            android:text="@string/next_button" />
+
+
+    </LinearLayout>
+
 </LinearLayout>
