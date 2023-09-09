@@ -17,11 +17,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.gall.msu.geoquiz.ui.theme.GeoQuizTheme
+import com.gall.msu.geoquiz.ui.theme.Question
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var trueButton : Button
     private lateinit var falseButton : Button
+
+    private val questionBank = listOf(
+        Question(R.string.question_australia, true),
+        Question(R.string.question_pacific, false),
+        Question(R.string.question_dolphins, true),
+        Question(R.string.question_mars, true),
+        Question(R.string.question_morocco, false)
+    )
+
+    private var currentIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

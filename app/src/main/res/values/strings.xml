@@ -5,4 +5,13 @@
     <string name="next_button">Next</string>
     <string name="prev_button">Prev</string>
     <string name="question_australia">Canberra is the capital of Australia</string>
+    <!-- true -->
+    <string name="question_pacific">The Atlantic Ocean is the largest ocean on Earth</string>
+    <!-- false -->
+    <string name="question_dolphins">There are dolphins in the Amazon river</string>
+    <!-- true -->
+    <string name="question_mars">Mars is the fourth planet from the sun in our solar system</string>
+    <!-- true -->
+    <string name="question_morocco">Casablanca is the capital of Morocco</string>
+    <!-- false -->
 </resources>
