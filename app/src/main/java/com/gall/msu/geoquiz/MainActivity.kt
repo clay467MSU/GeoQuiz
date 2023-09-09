@@ -16,13 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.gall.msu.geoquiz.databinding.ActivityMainBinding
 import com.gall.msu.geoquiz.ui.theme.GeoQuizTheme
 import com.gall.msu.geoquiz.ui.theme.Question
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var trueButton : Button
-    private lateinit var falseButton : Button
+    private lateinit var binding : ActivityMainBinding
+    //private lateinit var trueButton : Button
+    //private lateinit var falseButton : Button
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -36,28 +38,68 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
 
-        trueButton = findViewById<Button>(R.id.true_button)
-        falseButton = findViewById<Button>(R.id.false_button)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        trueButton.setOnClickListener { view: View ->
+        //trueButton = findViewById<Button>(R.id.true_button)
+        //falseButton = findViewById<Button>(R.id.false_button)
+
+        binding.trueButton.setOnClickListener { view: View ->
+            val thisAnswer = true
+            val correctAnswer = questionBank[currentIndex].answer
+            val message = if (thisAnswer == correctAnswer) "Correct" else "Incorrect"
             Toast.makeText(
                 this,
-                R.string.true_button,
+                message,
                 Toast.LENGTH_SHORT
             )
                 .show()
         }
 
-        falseButton.setOnClickListener { view: View ->
+        binding.falseButton.setOnClickListener { view: View ->
+            val thisAnswer = false
+            val correctAnswer = questionBank[currentIndex].answer
+            val message = if (thisAnswer == correctAnswer) "Correct" else "Incorrect"
             Toast.makeText(
                 this,
-                R.string.false_button,
+                message,
                 Toast.LENGTH_SHORT
             )
                 .show()
+        }
+
+        val commonOnClickListener = View.OnClickListener { view: View ->
+            currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
+
+        binding.nextButton.setOnClickListener(commonOnClickListener)
+        binding.questionTextview.setOnClickListener(commonOnClickListener)
+
+//        binding.nextButton.setOnClickListener { view: View ->
+//            currentIndex = (currentIndex + 1) % questionBank.size
+////            val questionTextResId = questionBank[currentIndex].textResId
+////            binding.questionTextview.setText(questionTextResId)
+////            validateIndex()
+//            updateQuestion()
+//        }
+        binding.prevButton.setOnClickListener { view: View ->
+            currentIndex = (currentIndex - 1) % questionBank.size
+//            val questionTextResId = questionBank[currentIndex].textResId
+//            binding.questionTextview.setText(questionTextResId)
+            validateIndex()
+            updateQuestion()
         }
     }
-
+    private fun updateQuestion() {
+        val questionTextResId = questionBank[currentIndex].textResId
+        binding.questionTextview.setText(questionTextResId)
+    }
+    private fun validateIndex(){
+        val maxIndex = questionBank.size - 1
+        if (currentIndex < 0) currentIndex = maxIndex
+//        if (currentIndex > maxIndex) currentIndex = 0
+    }
 }
