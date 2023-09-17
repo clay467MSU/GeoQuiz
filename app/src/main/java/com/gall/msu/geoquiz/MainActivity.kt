@@ -52,6 +52,16 @@ class MainActivity : ComponentActivity() {
                 Toast.LENGTH_SHORT
             )
                 .show()
+
+            //professor's code:
+            //error: "@Composable invocations can only happen from the context of a @Composable function"
+//            val snackbar = Snackbar.make(
+//                it,
+//                "Correct",
+//                Snackbar.LENGTH_LONG
+//
+//                checkAnswer(true)
+//            )
         }
 
         binding.falseButton.setOnClickListener { view: View ->
