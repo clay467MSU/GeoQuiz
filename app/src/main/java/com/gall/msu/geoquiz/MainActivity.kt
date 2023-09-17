@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 Toast.LENGTH_SHORT
             )
                 .show()
+            updateQuestion(true)
 
             //professor's code:
             //error: "@Composable invocations can only happen from the context of a @Composable function"
@@ -76,6 +77,7 @@ class MainActivity : ComponentActivity() {
                 Toast.LENGTH_SHORT
             )
                 .show()
+            updateQuestion(true)
         }
 
         val commonOnClickListener = View.OnClickListener { view: View ->
@@ -117,9 +119,11 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "onDestroy() called")
     }
 
-    private fun updateQuestion() {
+    private fun updateQuestion(isAnswered: Boolean = false) {
         val questionTextResId = questionBank[currentIndex].textResId
         binding.questionTextview.setText(questionTextResId)
+        binding.trueButton.isEnabled = !isAnswered
+        binding.falseButton.isEnabled = !isAnswered
     }
     private fun validateIndex(){
         val maxIndex = questionBank.size - 1
