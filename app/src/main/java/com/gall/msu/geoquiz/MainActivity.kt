@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import androidx.activity.ComponentActivity
 import android.view.View
 import androidx.activity.compose.setContent
@@ -95,12 +96,14 @@ class MainActivity : ComponentActivity() {
         var isCorrect = questionBank[currentIndex].correctAnswer == questionBank[currentIndex].userAnswer
 
         val message = if (isCorrect) "Correct" else "Incorrect"
+
         Toast.makeText(
             this,
             message,
             Toast.LENGTH_SHORT
         )
             .show()
+
         updateQuestion()
         var isOver = gameEnds()
         if (isOver) resetGame()
@@ -123,9 +126,14 @@ class MainActivity : ComponentActivity() {
         val isNotOver = questionBank.any { it.userAnswer == null }
         if (!isNotOver) {
             val numCorrectAnswers = questionBank.count { it.correctAnswer == it.userAnswer }
-            Log.d("numCorrect", numCorrectAnswers.toString())
             var score = (numCorrectAnswers.toDouble() / questionBank.size) * 100.0
-            Log.d("score", String.format("%.1f %%", score))
+
+            Toast.makeText(
+                this,
+                "Final Score: " + String.format("%.1f %%", score),
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
         return !isNotOver
     }
@@ -134,5 +142,7 @@ class MainActivity : ComponentActivity() {
         for (question in questionBank) {
             question.userAnswer = null
         }
+        currentIndex = 0
+        updateQuestion()
     }
 }
