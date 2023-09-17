@@ -44,16 +44,6 @@ class MainActivity : ComponentActivity() {
 
         binding.trueButton.setOnClickListener { view: View ->
             onAnswerClicked(true)
-
-            //professor's code:
-            //error: "@Composable invocations can only happen from the context of a @Composable function"
-//            val snackbar = Snackbar.make(
-//                it,
-//                "Correct",
-//                Snackbar.LENGTH_LONG
-//
-//                checkAnswer(true)
-//            )
         }
 
         binding.falseButton.setOnClickListener { view: View ->
@@ -112,8 +102,10 @@ class MainActivity : ComponentActivity() {
         )
             .show()
         updateQuestion()
-        gameEnds()
+        var isOver = gameEnds()
+        if (isOver) resetGame()
     }
+    //set question text & enable true/false buttons
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
         var isAnswered = questionBank[currentIndex].userAnswer != null
@@ -121,17 +113,26 @@ class MainActivity : ComponentActivity() {
         binding.trueButton.isEnabled = !isAnswered
         binding.falseButton.isEnabled = !isAnswered
     }
+    //make sure the index is valid
     private fun validateIndex(){
         val maxIndex = questionBank.size - 1
         if (currentIndex < 0) currentIndex = maxIndex
     }
-    private fun gameEnds(){
+    //determine if the game has ended. if so, calculate & display score
+    private fun gameEnds(): Boolean {
         val isNotOver = questionBank.any { it.userAnswer == null }
         if (!isNotOver) {
             val numCorrectAnswers = questionBank.count { it.correctAnswer == it.userAnswer }
             Log.d("numCorrect", numCorrectAnswers.toString())
             var score = (numCorrectAnswers.toDouble() / questionBank.size) * 100.0
             Log.d("score", String.format("%.1f %%", score))
+        }
+        return !isNotOver
+    }
+    //reset answers
+    private fun resetGame(){
+        for (question in questionBank) {
+            question.userAnswer = null
         }
     }
 }
