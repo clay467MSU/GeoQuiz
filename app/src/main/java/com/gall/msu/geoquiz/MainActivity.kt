@@ -25,15 +25,13 @@ private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
 
     private lateinit var binding : ActivityMainBinding
-    //private lateinit var trueButton : Button
-    //private lateinit var falseButton : Button
 
     private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_pacific, false),
-        Question(R.string.question_dolphins, true),
-        Question(R.string.question_mars, true),
-        Question(R.string.question_morocco, false)
+        Question(R.string.question_australia, true, null),
+        Question(R.string.question_pacific, false, null),
+        Question(R.string.question_dolphins, true, null),
+        Question(R.string.question_mars, true, null),
+        Question(R.string.question_morocco, false, null)
     )
 
     private var currentIndex = 0
@@ -45,16 +43,7 @@ class MainActivity : ComponentActivity() {
         setContentView(binding.root)
 
         binding.trueButton.setOnClickListener { view: View ->
-            val thisAnswer = true
-            val correctAnswer = questionBank[currentIndex].answer
-            val message = if (thisAnswer == correctAnswer) "Correct" else "Incorrect"
-            Toast.makeText(
-                this,
-                message,
-                Toast.LENGTH_SHORT
-            )
-                .show()
-            updateQuestion(true)
+            onAnswerClicked(true)
 
             //professor's code:
             //error: "@Composable invocations can only happen from the context of a @Composable function"
@@ -68,16 +57,7 @@ class MainActivity : ComponentActivity() {
         }
 
         binding.falseButton.setOnClickListener { view: View ->
-            val thisAnswer = false
-            val correctAnswer = questionBank[currentIndex].answer
-            val message = if (thisAnswer == correctAnswer) "Correct" else "Incorrect"
-            Toast.makeText(
-                this,
-                message,
-                Toast.LENGTH_SHORT
-            )
-                .show()
-            updateQuestion(true)
+            onAnswerClicked(false)
         }
 
         val commonOnClickListener = View.OnClickListener { view: View ->
@@ -118,9 +98,25 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         Log.d(TAG, "onDestroy() called")
     }
+    //controller function
+    private fun onAnswerClicked(answer: Boolean){
+        //store answer
+        questionBank[currentIndex].userAnswer = answer
+        var isCorrect = questionBank[currentIndex].correctAnswer == questionBank[currentIndex].userAnswer
 
-    private fun updateQuestion(isAnswered: Boolean = false) {
+        val message = if (isCorrect) "Correct" else "Incorrect"
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        updateQuestion()
+        gameEnds()
+    }
+    private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
+        var isAnswered = questionBank[currentIndex].userAnswer != null
         binding.questionTextview.setText(questionTextResId)
         binding.trueButton.isEnabled = !isAnswered
         binding.falseButton.isEnabled = !isAnswered
@@ -128,5 +124,14 @@ class MainActivity : ComponentActivity() {
     private fun validateIndex(){
         val maxIndex = questionBank.size - 1
         if (currentIndex < 0) currentIndex = maxIndex
+    }
+    private fun gameEnds(){
+        val isNotOver = questionBank.any { it.userAnswer == null }
+        if (!isNotOver) {
+            val numCorrectAnswers = questionBank.count { it.correctAnswer == it.userAnswer }
+            Log.d("numCorrect", numCorrectAnswers.toString())
+            var score = (numCorrectAnswers.toDouble() / questionBank.size) * 100.0
+            Log.d("score", String.format("%.1f %%", score))
+        }
     }
 }
