@@ -38,13 +38,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //trueButton = findViewById<Button>(R.id.true_button)
-        //falseButton = findViewById<Button>(R.id.false_button)
 
         binding.trueButton.setOnClickListener { view: View ->
             val thisAnswer = true
@@ -78,17 +74,8 @@ class MainActivity : ComponentActivity() {
         binding.nextButton.setOnClickListener(commonOnClickListener)
         binding.questionTextview.setOnClickListener(commonOnClickListener)
 
-//        binding.nextButton.setOnClickListener { view: View ->
-//            currentIndex = (currentIndex + 1) % questionBank.size
-////            val questionTextResId = questionBank[currentIndex].textResId
-////            binding.questionTextview.setText(questionTextResId)
-////            validateIndex()
-//            updateQuestion()
-//        }
         binding.prevButton.setOnClickListener { view: View ->
             currentIndex = (currentIndex - 1) % questionBank.size
-//            val questionTextResId = questionBank[currentIndex].textResId
-//            binding.questionTextview.setText(questionTextResId)
             validateIndex()
             updateQuestion()
         }
@@ -100,6 +87,5 @@ class MainActivity : ComponentActivity() {
     private fun validateIndex(){
         val maxIndex = questionBank.size - 1
         if (currentIndex < 0) currentIndex = maxIndex
-//        if (currentIndex > maxIndex) currentIndex = 0
     }
 }
