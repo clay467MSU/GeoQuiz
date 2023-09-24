@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.activity.ComponentActivity
 import android.view.View
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
@@ -27,21 +28,14 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var binding : ActivityMainBinding
 
-    private val questionBank = listOf(
-        Question(R.string.question_australia, true, null),
-        Question(R.string.question_pacific, false, null),
-        Question(R.string.question_dolphins, true, null),
-        Question(R.string.question_mars, true, null),
-        Question(R.string.question_morocco, false, null)
-    )
-
-    private var currentIndex = 0
+    private val quizViewModel: QuizViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate() called")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        updateQuestion()
 
         binding.trueButton.setOnClickListener { view: View ->
             onAnswerClicked(true)
@@ -52,7 +46,7 @@ class MainActivity : ComponentActivity() {
         }
 
         val commonOnClickListener = View.OnClickListener { view: View ->
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.nextQuestion()
             updateQuestion()
         }
 
@@ -60,8 +54,8 @@ class MainActivity : ComponentActivity() {
         binding.questionTextview.setOnClickListener(commonOnClickListener)
 
         binding.prevButton.setOnClickListener { view: View ->
-            currentIndex = (currentIndex - 1) % questionBank.size
-            validateIndex()
+            quizViewModel.prevQuestion()
+            quizViewModel.validateIndex()
             updateQuestion()
         }
 
@@ -92,8 +86,8 @@ class MainActivity : ComponentActivity() {
     //controller function
     private fun onAnswerClicked(answer: Boolean){
         //store answer
-        questionBank[currentIndex].userAnswer = answer
-        var isCorrect = questionBank[currentIndex].correctAnswer == questionBank[currentIndex].userAnswer
+        quizViewModel.userAnswer = answer
+        var isCorrect = quizViewModel.correctAnswer == answer
 
         val message = if (isCorrect) "Correct" else "Incorrect"
 
@@ -110,23 +104,19 @@ class MainActivity : ComponentActivity() {
     }
     //set question text & enable true/false buttons
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
-        var isAnswered = questionBank[currentIndex].userAnswer != null
+        val questionTextResId = quizViewModel.questionText
+        var isAnswered = quizViewModel.isAnswered
         binding.questionTextview.setText(questionTextResId)
         binding.trueButton.isEnabled = !isAnswered
         binding.falseButton.isEnabled = !isAnswered
     }
-    //make sure the index is valid
-    private fun validateIndex(){
-        val maxIndex = questionBank.size - 1
-        if (currentIndex < 0) currentIndex = maxIndex
-    }
+
     //determine if the game has ended. if so, calculate & display score
     private fun gameEnds(): Boolean {
-        val isNotOver = questionBank.any { it.userAnswer == null }
+        val isNotOver = quizViewModel.isNotOver
         if (!isNotOver) {
-            val numCorrectAnswers = questionBank.count { it.correctAnswer == it.userAnswer }
-            var score = (numCorrectAnswers.toDouble() / questionBank.size) * 100.0
+            val numCorrectAnswers = quizViewModel.numCorrectAnswers
+            var score = quizViewModel.score
 
             Toast.makeText(
                 this,
@@ -139,10 +129,7 @@ class MainActivity : ComponentActivity() {
     }
     //reset answers
     private fun resetGame(){
-        for (question in questionBank) {
-            question.userAnswer = null
-        }
-        currentIndex = 0
+        quizViewModel.resetQuestions()
         updateQuestion()
     }
 }
