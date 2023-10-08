@@ -104,7 +104,8 @@ class MainActivity : ComponentActivity() {
         quizViewModel.userAnswer = answer
         var isCorrect = quizViewModel.correctAnswer == answer
 
-        val message = if (isCorrect) "Correct" else "Incorrect"
+        var message = if (isCorrect) "Correct" else "Incorrect"
+        if (quizViewModel.isCheater) message = "Cheating is wrong."
 
         Toast.makeText(
             this,
