@@ -122,6 +122,7 @@ class MainActivity : ComponentActivity() {
     private fun updateQuestion() {
         val questionTextResId = quizViewModel.questionText
         var isAnswered = quizViewModel.isAnswered
+        quizViewModel.isCheater = false
         binding.questionTextview.setText(questionTextResId)
         binding.trueButton.isEnabled = !isAnswered
         binding.falseButton.isEnabled = !isAnswered
