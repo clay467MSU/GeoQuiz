@@ -6,7 +6,7 @@ import com.gall.msu.geoquiz.ui.theme.Question
 
 private const val TAG = "QuizViewModel"
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
-
+const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     private val questionBank = listOf(
         Question(R.string.question_australia, true, null),
@@ -15,6 +15,10 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         Question(R.string.question_mars, true, null),
         Question(R.string.question_morocco, false, null)
     )
+
+    var isCheater: Boolean
+        get() = savedStateHandle.get(IS_CHEATER_KEY) ?: false
+        set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
 
     private var currentIndex: Int
         get() = savedStateHandle.get(CURRENT_INDEX_KEY) ?: 0

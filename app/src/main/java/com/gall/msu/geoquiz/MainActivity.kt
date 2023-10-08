@@ -1,5 +1,6 @@
 package com.gall.msu.geoquiz
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -8,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.activity.ComponentActivity
 import android.view.View
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -30,12 +32,25 @@ class MainActivity : ComponentActivity() {
 
     private val quizViewModel: QuizViewModel by viewModels()
 
+    private val cheatLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            quizViewModel.isCheater = result.data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate() called")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         updateQuestion()
+
+        binding.cheatButton.setOnClickListener {
+            val answerIsTrue = quizViewModel.correctAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            cheatLauncher.launch(intent)
+        }
 
         binding.trueButton.setOnClickListener { view: View ->
             onAnswerClicked(true)
